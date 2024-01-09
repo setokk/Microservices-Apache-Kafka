@@ -1,0 +1,100 @@
+version: "3.8"
+services:
+  # Services needed for kafka to run
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: broker
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  # Microservice for handling books
+  book-persistence:
+    build:
+      context: ./book-persistence
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      spring.datasource.url: "jdbc:postgresql://book-db:5432/atm"
+    depends_on:
+      - book-db
+
+  # Microservice for handling authors
+  author-persistence:
+    build:
+      context: ./author-persistence
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      spring.datasource.url: "jdbc:postgresql://author-db:5433/atm"
+    depends_on:
+      - author-db
+
+  # Service for publishing books (has all the book related urls)
+  book-publisher:
+    build:
+      context: ./book-publisher
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - book-persistence
+      - author-persistence
+
+  # Notification service
+  notifications:
+    build:
+      context: ./notifications
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    depends_on:
+      - book-persistence
+      - author-persistence
+      - book-publisher
+
+  # Book database
+  book-db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_book_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "root!238Ji*"
+      POSTGRES_DB: "book"
+
+  # Author database
+  author-db:
+    image: postgres
+    ports:
+      - "5433:5433"
+    volumes:
+      - pg_author_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "root!238Ji*"
+      POSTGRES_DB: "author"
+
+volumes:
+  pg_book_data:
+  pg_author_data:
