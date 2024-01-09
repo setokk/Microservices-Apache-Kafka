@@ -33,7 +33,7 @@ public class BookPublishedListener {
     public void listens(String payload) {
         log.info("Received book {}", payload);
 
-        Book book = extractBookFromJSON(payload);
+        Book book = getBookFromJSON(payload);
         Book savedBook = bookService.save(book);
         String message = String.format(
                 "Book '%s' [%s] saved!",
@@ -44,7 +44,7 @@ public class BookPublishedListener {
         notificationService.publish(new Notification(message, LocalDateTime.now()));
     }
 
-    private Book extractBookFromJSON(String s) {
+    private Book getBookFromJSON(String s) {
         JSONObject json = new JSONObject(s);
         JSONObject author = json.getJSONObject("author");
 
