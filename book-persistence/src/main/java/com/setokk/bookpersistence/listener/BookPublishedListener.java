@@ -4,19 +4,17 @@ import com.setokk.bookpersistence.model.Book;
 import com.setokk.bookpersistence.model.Notification;
 import com.setokk.bookpersistence.service.BookService;
 import com.setokk.bookpersistence.service.NotificationService;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
+@Slf4j
 public class BookPublishedListener {
-    private static Logger log = LoggerFactory.getLogger(BookPublishedListener.class);
     private static final String BOOK_PUBLISHED_TOPIC = "book.published";
 
     private final BookService bookService;
