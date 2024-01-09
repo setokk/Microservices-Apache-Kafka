@@ -9,6 +9,6 @@ RUN mvn -f /home/app/pom.xml clean package -DskipTests
 FROM openjdk:21-jdk-bullseye
 COPY --from=build /home/app/target/*.jar app.jar
 
-EXPOSE 8082
+EXPOSE 8083
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
