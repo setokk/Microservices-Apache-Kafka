@@ -27,7 +27,6 @@ public class BookController {
     public ResponseEntity<?> createBook(@RequestBody BookRequest bookRequest) {
         try {
             String bookJSON = objectMapper.writeValueAsString(bookRequest);
-            System.out.println(bookJSON);
             bookService.publish(bookJSON);
             return new ResponseEntity<>(HttpStatus.OK);
         }
