@@ -1,9 +1,7 @@
 package com.setokk.bookpersistence.listener;
 
 import com.setokk.bookpersistence.model.Book;
-import com.setokk.bookpersistence.model.Notification;
 import com.setokk.bookpersistence.service.BookService;
-import com.setokk.bookpersistence.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +16,10 @@ public class BookPublishedListener {
     public static final String BOOK_PUBLISHED_TOPIC = "book.published";
 
     private final BookService bookService;
-    private final NotificationService notificationService;
 
     @Autowired
-    public BookPublishedListener(BookService bookService,
-                                 NotificationService notificationService) {
+    public BookPublishedListener(BookService bookService) {
         this.bookService = bookService;
-        this.notificationService = notificationService;
     }
 
     @KafkaListener(topics = BOOK_PUBLISHED_TOPIC)
@@ -39,7 +34,7 @@ public class BookPublishedListener {
                 savedBook.getId()
         );
 
-        notificationService.publish(new Notification(message, LocalDateTime.now()));
+        log.info(message);
     }
 
     private Book getBookFromJSON(String s) {
