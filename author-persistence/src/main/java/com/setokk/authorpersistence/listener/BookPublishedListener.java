@@ -48,7 +48,7 @@ public class BookPublishedListener {
         JSONObject author = json.getJSONObject("author");
 
         return Author.builder()
-                .name(json.getString("name"))
+                .name(author.getString("name"))
                 .build();
     }
 }
