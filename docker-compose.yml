@@ -32,7 +32,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      spring.datasource.url: "jdbc:postgresql://book-db:5432/atm"
+      spring.datasource.url: "jdbc:postgresql://book-db:5432/book"
     depends_on:
       - book-db
 
@@ -44,7 +44,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      spring.datasource.url: "jdbc:postgresql://author-db:5433/atm"
+      spring.datasource.url: "jdbc:postgresql://author-db:5433/author"
     depends_on:
       - author-db
 
