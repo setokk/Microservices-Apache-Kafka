@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Component
 @Slf4j
 public class BookPublishedListener {
-    private static final String BOOK_PUBLISHED_TOPIC = "book.published";
+    public static final String BOOK_PUBLISHED_TOPIC = "book.published";
 
     private final BookService bookService;
     private final NotificationService notificationService;

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BookService {
-    private final static String BOOK_PUBLISHED_TOPIC = "book.published";
+    public final static String BOOK_PUBLISHED_TOPIC = "book.published";
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
