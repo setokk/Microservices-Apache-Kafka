@@ -62,18 +62,6 @@ services:
       - book-persistence
       - author-persistence
 
-  # Notification service
-  notifications:
-    build:
-      context: ./notifications
-      dockerfile: Dockerfile
-    ports:
-      - "8083:8083"
-    depends_on:
-      - book-persistence
-      - author-persistence
-      - book-publisher
-
   # Book database
   book-db:
     image: postgres
